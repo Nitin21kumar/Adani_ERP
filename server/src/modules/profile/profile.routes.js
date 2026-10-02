@@ -1,0 +1,5 @@
+import { Router } from "express";
+import { allow, managementRoles, protect } from "../../core/middleware/auth.js";
+import { requireFields } from "../../core/middleware/validate.js";
+import * as controller from "./profile.controller.js";
+const router = Router(); router.use(protect); router.get("/me", controller.me); router.put("/me/photo", requireFields("photo_url"), controller.photo); router.get("/me/documents", controller.listDocuments); router.post("/me/documents", requireFields("file_name", "file_url"), controller.addDocument); router.delete("/me/documents/:id", controller.removeDocument); router.post("/me/change-request", controller.submitChange); router.get("/me/change-request", controller.latestChange); router.get("/change-requests", allow(...managementRoles), controller.listChanges); router.post("/change-requests/:id/approve", allow(...managementRoles), controller.approve); router.post("/change-requests/:id/reject", allow(...managementRoles), controller.reject); export default router;

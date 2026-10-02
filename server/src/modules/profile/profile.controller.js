@@ -1,0 +1,12 @@
+import { asyncHandler } from "../../core/utils/asyncHandler.js";
+import * as service from "./profile.service.js";
+export const me = asyncHandler(async (req, res) => res.json(await service.profile(req.employee)));
+export const photo = asyncHandler(async (req, res) => res.json(await service.updatePhoto(req.employee, req.body.photo_url)));
+export const listDocuments = asyncHandler(async (req, res) => res.json(await service.documents(req.employee)));
+export const addDocument = asyncHandler(async (req, res) => res.status(201).json(await service.addDocument(req.employee, req.body)));
+export const removeDocument = asyncHandler(async (req, res) => { await service.removeDocument(req.employee, req.params.id); res.json({ message: "Document removed" }); });
+export const submitChange = asyncHandler(async (req, res) => res.status(201).json(await service.submitChange(req.employee, req.body.changes || req.body)));
+export const latestChange = asyncHandler(async (req, res) => res.json(await service.latestChange(req.employee)));
+export const listChanges = asyncHandler(async (req, res) => res.json(await service.listChanges(req.query.status)));
+export const approve = asyncHandler(async (req, res) => res.json(await service.reviewChange(req.params.id, "approved", req.user, req.body.comment)));
+export const reject = asyncHandler(async (req, res) => res.json(await service.reviewChange(req.params.id, "rejected", req.user, req.body.comment)));

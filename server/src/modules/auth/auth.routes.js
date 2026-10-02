@@ -1,0 +1,14 @@
+import { Router } from "express";
+import { protect } from "../../core/middleware/auth.js";
+import { requireFields } from "../../core/middleware/validate.js";
+import * as controller from "./auth.controller.js";
+const router = Router();
+router.post("/login", requireFields("username", "password"), controller.login);
+router.post("/refresh", requireFields("refresh_token"), controller.refresh);
+router.post("/forgot-password", requireFields("identifier"), controller.forgotPassword);
+router.post("/reset-password", requireFields("token", "new_password"), controller.reset);
+router.use(protect);
+router.post("/logout", controller.logout);
+router.post("/change-password", requireFields("old_password", "new_password"), controller.changePassword);
+router.get("/me", controller.me);
+export default router;

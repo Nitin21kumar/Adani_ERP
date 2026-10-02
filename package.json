@@ -1,0 +1,14 @@
+{
+  "name": "employee-erp-system-mern",
+  "private": true,
+  "version": "2.0.0",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "install:all": "npm install --prefix server && npm install --prefix client",
+    "seed": "npm run seed --prefix server",
+    "render:build": "npm ci --prefix server --omit=dev && npm ci --prefix client --include=dev && npm run build --prefix client",
+    "render:start": "npm run seed --prefix server && npm run seed:audit --prefix server && npm start --prefix server"
+  },
+  "engines": { "node": ">=20" },
+  "devDependencies": { "concurrently": "^9.1.2" }
+}

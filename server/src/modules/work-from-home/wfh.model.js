@@ -1,0 +1,3 @@
+import mongoose from "mongoose";
+const schema = new mongoose.Schema({ employee: { type: mongoose.Schema.Types.ObjectId, ref: "Employee", required: true }, reason: { type: String, required: true }, expected_work: { type: String, required: true }, from_date: { type: Date, required: true }, to_date: { type: Date, required: true }, attachment_url: String, status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" }, reviewed_by: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, review_comment: String }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
+export default mongoose.model("WfhRequest", schema);

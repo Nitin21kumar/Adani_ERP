@@ -1,0 +1,44 @@
+services:
+  mongo:
+    image: mongo:8
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+  server:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run seed && npm run seed:audit && npm start"
+    volumes:
+      - ./server:/app
+      - server_node_modules:/app/node_modules
+      - uploads:/app/uploads
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/employee_erp
+      JWT_ACCESS_SECRET: development-access-secret-change-me
+      JWT_REFRESH_SECRET: development-refresh-secret-change-me
+      AUDIT_JWT_ACCESS_SECRET: development-audit-access-secret-change-me
+      CLIENT_URL: http://localhost:5173
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+  client:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    volumes:
+      - ./client:/app
+      - client_node_modules:/app/node_modules
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000/api/v1
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+volumes:
+  mongo_data:
+  uploads:
+  server_node_modules:
+  client_node_modules:

@@ -1,0 +1,5 @@
+import mongoose from "mongoose";
+const locationSchema = new mongoose.Schema({ event_type: { type: String, enum: ["login", "logout"], required: true }, latitude: Number, longitude: Number, full_address: String, captured_at: { type: Date, default: Date.now } }, { _id: false });
+const schema = new mongoose.Schema({ employee: { type: mongoose.Schema.Types.ObjectId, ref: "Employee", required: true }, date: { type: Date, required: true }, login_time: Date, logout_time: Date, working_hours: Number, is_late: { type: Boolean, default: false }, browser: String, os: String, device: String, ip_address: String, status: { type: String, default: "present" }, login_verification_photo_url: String, login_verification_photo_status: String, logout_verification_photo_url: String, logout_verification_photo_status: String, locations: [locationSchema] }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
+schema.index({ employee: 1, date: 1 }, { unique: true });
+export default mongoose.model("Attendance", schema);

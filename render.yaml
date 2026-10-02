@@ -1,0 +1,41 @@
+# Render Blueprint — one Web Service serves both the API (/api/v1) and the
+# built React app (ERP + Audit portal) from the same URL.
+# MongoDB is not hosted by Render: create a free MongoDB Atlas cluster and
+# paste its connection string into MONGODB_URI when Render asks for it.
+services:
+  - type: web
+    name: adani-power-erp
+    runtime: node
+    # Free plan: no persistent disk, so uploaded files are lost on every
+    # restart/redeploy, and the service sleeps after 15 min of inactivity.
+    plan: free
+    buildCommand: npm run render:build
+    startCommand: npm run render:start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_BASE_URL
+        value: /api/v1
+      - key: UPLOAD_DIR
+        value: uploads
+      - key: MONGODB_URI
+        sync: false
+      - key: CLIENT_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: AUDIT_JWT_ACCESS_SECRET
+        generateValue: true
+      - key: SEED_ADMIN_EMAIL
+        sync: false
+      - key: SEED_ADMIN_PASSWORD
+        sync: false
+      - key: SEED_AUDIT_ADMIN_EMAIL
+        sync: false
+      - key: SEED_AUDIT_ADMIN_PASSWORD
+        sync: false
